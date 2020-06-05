@@ -1,14 +1,15 @@
 package dev.dokan.dokan_java.structure;
 
 
-import dev.dokan.dokan_java.DokanNativeMethods;
-import dev.dokan.dokan_java.constants.dokany.MountOption;
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
+import dev.dokan.dokan_java.DokanNativeMethods;
+import dev.dokan.dokan_java.constants.dokany.MountOption;
 import dev.dokan.dokan_java.masking.MaskValueSet;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -95,5 +96,22 @@ public class DokanOptions extends Structure implements Structure.ByReference {
 	@Override
 	public String toString() {
 		return "DeviceOptions(Version=" + this.Version + ", ThreadCount=" + this.ThreadCount + ", Options=" + this.Options + ", mountOptions=" + this.getMountOptions() + ", GlobalContext=" + this.GlobalContext + ", MountPoint=" + this.MountPoint + ", UNCName=" + this.UNCName + ", Timeout=" + this.Timeout + ", AllocationUnitSize=" + this.AllocationUnitSize + ", SectorSize=" + this.SectorSize + ")";
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof DokanOptions)) return false;
+		if (!super.equals(o)) return false;
+		DokanOptions options = (DokanOptions) o;
+		return this.Version == options.Version &&
+				this.ThreadCount == options.ThreadCount &&
+				this.Options == options.Options &&
+				this.GlobalContext == options.GlobalContext &&
+				this.Timeout == options.Timeout &&
+				this.AllocationUnitSize == options.AllocationUnitSize &&
+				this.SectorSize == options.SectorSize &&
+				Objects.equals(this.MountPoint, options.MountPoint) &&
+				Objects.equals(this.UNCName, options.UNCName);
 	}
 }

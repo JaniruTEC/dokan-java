@@ -53,6 +53,11 @@ public class DirListingFileSystem extends DokanFileSystemStub {
     public int zwCreateFile(WString rawPath, DokanIOSecurityContext securityContext, int rawDesiredAccess, int rawFileAttributes, int rawShareAccess, int rawCreateDisposition, int rawCreateOptions, DokanFileInfo dokanFileInfo) {
         Path p = getrootedPath(rawPath);
 
+        if(!this.dokanOptions.equals(dokanFileInfo.DokanOpts)) {
+            System.out.println("This: " + this.dokanOptions);
+            System.out.println("Parameter: " + dokanFileInfo.DokanOpts);
+        }
+
         //the files must exist and we are read only here
         CreateDisposition openOption = EnumInteger.enumFromInt(rawCreateDisposition, CreateDisposition.values());
         if (Files.exists(p)) {
