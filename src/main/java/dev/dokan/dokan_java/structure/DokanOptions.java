@@ -3,6 +3,7 @@ package dev.dokan.dokan_java.structure;
 
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
+import com.sun.jna.platform.win32.WinDef;
 import dev.dokan.dokan_java.DokanNativeMethods;
 import dev.dokan.dokan_java.constants.dokany.MountOption;
 import dev.dokan.dokan_java.masking.MaskValueSet;
@@ -54,7 +55,7 @@ public class DokanOptions extends Structure implements Structure.ByReference {
 	/**
 	 * Max timeout in milliseconds of each request before Dokan gives up to wait events to complete.
 	 */
-	public long Timeout;
+	public WinDef.ULONG Timeout;
 
 	/**
 	 * Allocation Unit Size of the volume. This will affect the file size.
@@ -79,7 +80,7 @@ public class DokanOptions extends Structure implements Structure.ByReference {
 		} else {
 			UNCName = null;
 		}
-		Timeout = timeout;
+		Timeout = new WinDef.ULONG(timeout);
 		AllocationUnitSize = allocationUnitSize;
 		SectorSize = sectorSize;
 	}

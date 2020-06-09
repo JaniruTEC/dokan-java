@@ -57,8 +57,8 @@ public class DirListingFileSystem extends DokanFileSystemStub {
             System.out.println("This: " + this.dokanOptions);
             System.out.println("Parameter: " + dokanFileInfo.DokanOpts);
 
-            System.out.println("This Timeout: " + paddedLong(this.dokanOptions.Timeout));
-            System.out.println("Parameter Timeout: " + paddedLong(dokanFileInfo.DokanOpts.Timeout));
+            System.out.println("This Timeout: " + paddedLong(this.dokanOptions.Timeout.longValue()));
+            System.out.println("Parameter Timeout: " + paddedLong(dokanFileInfo.DokanOpts.Timeout.longValue()));
         }
 
         //the files must exist and we are read only here
