@@ -53,9 +53,12 @@ public class DirListingFileSystem extends DokanFileSystemStub {
     public int zwCreateFile(WString rawPath, DokanIOSecurityContext securityContext, int rawDesiredAccess, int rawFileAttributes, int rawShareAccess, int rawCreateDisposition, int rawCreateOptions, DokanFileInfo dokanFileInfo) {
         Path p = getrootedPath(rawPath);
 
-        if(!this.dokanOptions.equals(dokanFileInfo.DokanOpts)) {
+        if (!this.dokanOptions.equals(dokanFileInfo.DokanOpts)) {
             System.out.println("This: " + this.dokanOptions);
             System.out.println("Parameter: " + dokanFileInfo.DokanOpts);
+
+            System.out.println("This Timeout: " + paddedLong(this.dokanOptions.Timeout));
+            System.out.println("Parameter Timeout: " + paddedLong(dokanFileInfo.DokanOpts.Timeout));
         }
 
         //the files must exist and we are read only here
@@ -106,6 +109,10 @@ public class DirListingFileSystem extends DokanFileSystemStub {
         dokanFileInfo.Context = val;
 
         return NtStatuses.STATUS_SUCCESS;
+    }
+
+    private String paddedLong(long l) {
+        return String.format("%64s", Long.toBinaryString(l)).replace(' ', '0');
     }
 
     @Override
