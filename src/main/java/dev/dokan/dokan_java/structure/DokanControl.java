@@ -3,6 +3,7 @@ package dev.dokan.dokan_java.structure;
 import com.sun.jna.NativeLong;
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
 
 import java.util.ArrayList;
@@ -19,12 +20,12 @@ public class DokanControl extends Structure implements Structure.ByReference {
     /**
      * File System Type
      */
-    public long Type;
+    public WinDef.ULONG Type;
 
     /**
      * Mount point. Can be "M:\" (drive letter) or "C:\mount\dokan" (path in NTFS)
      */
-    public char[] MountPoint = new char[256];
+    public char[] MountPoint = new char[260];
 
     /**
      * UNC name used for network volume
@@ -39,12 +40,12 @@ public class DokanControl extends Structure implements Structure.ByReference {
     /**
      * Volume Device Object
      */
-    public Pointer DeviceObject;
+    public Pointer DeviceObject; //TODO Remove/Alter?
 
     /**
      * Session ID of calling process
      */
-    public long SessionId;
+    public WinDef.ULONG SessionId;
 
     public DokanControl(Pointer p) {
         this(p, 0);

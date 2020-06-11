@@ -1,5 +1,6 @@
 package dev.dokan.dokan_java.structure;
 
+import com.sun.jna.platform.win32.WinDef;
 import dev.dokan.dokan_java.DokanNativeMethods;
 import dev.dokan.dokan_java.DokanOperations;
 import com.sun.jna.Structure;
@@ -18,7 +19,7 @@ public class DokanFileInfo extends Structure implements Structure.ByReference {
      * Context that can be used to carry information between operation. The context can carry whatever type like {@link com.sun.jna.platform.win32.WinNT.HANDLE}, {@link Structure}, {@link com.sun.jna.ptr.IntByReference},
      * {@link com.sun.jna.Pointer} that will help the implementation understand the request context of the event.
      */
-    public long Context;
+    public WinDef.ULONGLONG Context;
 
     /**
      * Flag if the file has to be delete during {@link DokanOperations#Cleanup} event.
@@ -28,7 +29,7 @@ public class DokanFileInfo extends Structure implements Structure.ByReference {
     /**
      * Reserved. Used internally by Dokan library. Never modify.
      */
-    public long DokanContext;
+    public WinDef.ULONGLONG DokanContext;
 
     /**
      * A pointer to {@link DokanOptions} which was passed to {@link DokanNativeMethods#DokanMain}.
@@ -53,7 +54,7 @@ public class DokanFileInfo extends Structure implements Structure.ByReference {
     /**
      * Process ID for the thread that originally requested a given I/O operation.
      */
-    public int ProcessId;
+    public WinDef.ULONG ProcessId;
 
     /**
      * Read or write is synchronous IO.

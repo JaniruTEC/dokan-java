@@ -3,6 +3,7 @@ package dev.dokan.dokan_java.structure;
 
 import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
+import com.sun.jna.platform.win32.WinDef;
 
 
 /**
@@ -17,12 +18,12 @@ public class UnicodeString extends Structure {
 	/**
 	 * The length, in bytes, of the string stored in {@link UnicodeString#Buffer}.
 	 */
-	public short Length;
+	public WinDef.USHORT Length;
 
 	/**
 	 * The length, in bytes, of {@link UnicodeString#Buffer}.
 	 */
-	public short MaximumLength;
+	public WinDef.USHORT MaximumLength;
 
 	/**
 	 * Pointer to a buffer used to contain a string of wide characters.

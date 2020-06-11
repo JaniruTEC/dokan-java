@@ -1,11 +1,13 @@
 package dev.dokan.dokan_java.structure;
 
 
+import com.sun.jna.platform.win32.WinDef;
 import dev.dokan.dokan_java.DokanNativeMethods;
 import dev.dokan.dokan_java.constants.dokany.MountOption;
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
 import dev.dokan.dokan_java.masking.MaskValueSet;
+import org.joou.ULong;
 
 import java.util.Arrays;
 import java.util.List;
@@ -21,22 +23,22 @@ public class DokanOptions extends Structure implements Structure.ByReference {
 	/**
 	 * Version of the Dokan features requested (version "123" is equal to Dokan version 1.2.3).
 	 */
-	public short Version = DokanNativeMethods.getMinimumRequiredDokanVersion();
+	public WinDef.USHORT Version = DokanNativeMethods.getMinimumRequiredDokanVersion();
 
 	/**
 	 * Number of threads to be used internally by Dokan library. More thread will handle more events at the same time.
 	 */
-	public short ThreadCount;
+	public WinDef.USHORT ThreadCount;
 
 	/**
 	 * Features enable for the mount. It is a combination of {@link MountOption} masks.
 	 */
-	public int Options;
+	public WinDef.ULONG Options;
 
 	/**
 	 * FileSystem can store anything here
 	 */
-	public long GlobalContext = 0L;
+	public WinDef.ULONGLONG GlobalContext = new WinDef.ULONGLONG(0L);
 
 	/**
 	 * Mount point. It can be a drive letter like \"M:\\\" or a folder path \"C:\\mount\\dokany\" on a NTFS partition.
@@ -53,17 +55,17 @@ public class DokanOptions extends Structure implements Structure.ByReference {
 	/**
 	 * Max timeout in milliseconds of each request before Dokan gives up to wait events to complete.
 	 */
-	public long Timeout;
+	public WinDef.ULONG Timeout;
 
 	/**
 	 * Allocation Unit Size of the volume. This will affect the file size.
 	 */
-	public long AllocationUnitSize;
+	public WinDef.ULONG AllocationUnitSize;
 
 	/**
 	 * Sector Size of the volume. This will affect then file size.
 	 */
-	public long SectorSize;
+	public WinDef.ULONG SectorSize;
 
 	public DokanOptions() {
 

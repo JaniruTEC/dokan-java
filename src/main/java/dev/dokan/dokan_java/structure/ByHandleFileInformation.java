@@ -1,12 +1,13 @@
 package dev.dokan.dokan_java.structure;
 
-import dev.dokan.dokan_java.DokanOperations;
-import dev.dokan.dokan_java.DokanUtils;
-import dev.dokan.dokan_java.constants.microsoft.FileAttribute;
 import com.sun.jna.Structure;
 import com.sun.jna.platform.win32.WinBase;
 import com.sun.jna.platform.win32.WinBase.FILETIME;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
+import dev.dokan.dokan_java.DokanOperations;
+import dev.dokan.dokan_java.DokanUtils;
+import dev.dokan.dokan_java.constants.microsoft.FileAttribute;
 import dev.dokan.dokan_java.masking.MaskValueSet;
 
 import java.nio.file.Path;
@@ -39,7 +40,7 @@ public class ByHandleFileInformation extends Structure implements Structure.ByRe
      * The file attributes of a file. For possible values and their descriptions, see File Attribute Constants. The FILE_ATTRIBUTE_SPARSE_FILE attribute on the file is set if any of the streams of the file have ever been
      * sparse.
      */
-    public int dwFileAttributes;
+    public WinDef.DWORD dwFileAttributes;
 
     /**
      * A FILETIME structure that specifies when a file or directory was created. If the underlying file system does not support creation time, this member is zero.
@@ -61,32 +62,32 @@ public class ByHandleFileInformation extends Structure implements Structure.ByRe
     /**
      * The serial number of the volume that contains a file.
      */
-    public int dwVolumeSerialNumber;
+    public WinDef.DWORD dwVolumeSerialNumber;
 
     /**
      * The high-order DWORD value of the file size, in bytes. This value is zero unless the file size is greater than MAXDWORD. The size of the file is equal to (nFileSizeHigh * (MAXDWORD+1)) + nFileSizeLow.
      */
-    public int nFileSizeHigh;
+    public WinDef.DWORD nFileSizeHigh;
 
     /**
      * The low-order DWORD value of the file size, in bytes.
      */
-    public int nFileSizeLow;
+    public WinDef.DWORD nFileSizeLow;
 
     /**
      * The high-order DWORD value of the file size, in bytes. This value is zero unless the file size is greater than MAXDWORD. The size of the file is equal to (nFileSizeHigh* (MAXDWORD+1)) + nFileSizeLow.
      */
-    public int nFileIndexHigh;
+    public WinDef.DWORD nFileIndexHigh;
 
     /**
      * The low-order DWORD value of the file size, in bytes.
      */
-    public int nFileIndexLow;
+    public WinDef.DWORD nFileIndexLow;
 
     /**
      * The number of links to this file. For the FAT file system this member is always 1. For the NTFS file system, it can be more than 1.
      */
-    public int nNumberOfLinks = 1;
+    public WinDef.DWORD nNumberOfLinks = 1;
 
     private Path filePath;
     private long fileIndex;
