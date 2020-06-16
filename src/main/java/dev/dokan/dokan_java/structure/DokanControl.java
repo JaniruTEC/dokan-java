@@ -5,6 +5,8 @@ import com.sun.jna.Pointer;
 import com.sun.jna.Structure;
 import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
+import dev.dokan.dokan_java.Unsigned;
+import dev.dokan.dokan_java.UnsignedConversions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +56,7 @@ public class DokanControl extends Structure implements Structure.ByReference {
     public DokanControl(Pointer p, long offset) {
         super(p);
         long currentOffset = offset;
-        this.Type = p.getLong(currentOffset);
+        this.Type = UnsignedConversions.primitiveToNative(p.getInt(currentOffset));
         currentOffset += NativeLong.SIZE;
         this.MountPoint = p.getCharArray(currentOffset, WinNT.MAX_PATH);
         currentOffset += WinNT.MAX_PATH * 2;
@@ -64,7 +66,7 @@ public class DokanControl extends Structure implements Structure.ByReference {
         currentOffset += 64 * 2;
         this.DeviceObject = new Pointer(p.getLong(currentOffset));
         currentOffset += NativeLong.SIZE;
-        this.SessionId = p.getLong(currentOffset);
+        this.SessionId = UnsignedConversions.primitiveToNative(p.getInt(currentOffset));
     }
 
 
@@ -80,19 +82,26 @@ public class DokanControl extends Structure implements Structure.ByReference {
      * @param length the number of elements in the array. Also acquired with the native method call.
      * @return a list of DokanControl structures
      */
-    public static List<DokanControl> getDokanControlList(Pointer start, long length) {
+    public static List<DokanControl> getDokanControlList(Pointer start, @Unsigned int length) { //TODO Relocate
         List<DokanControl> list = new ArrayList<>();
-        if (length == 0) {
-            return list;
-        } else if (length < 0) {
-            //TODO length is actually an unsigned long! -> java always treats them as signed
-            return list;
-        } else {
+        /*
+         * Let's do the math:
+         * A list that uses an unsigned int (32 bit) as index could save up to 2^32 objects.
+         * Even if it only saved one byte in each entry (not accounting for the actual overhead of the entries themselves),
+         * that would be 2^32 bytes = 4 GB for that list alone!
+         * If the list of active Dokan MountPoints exceeds 2^31 (signed int) entries, we probably have other problems.
+         *
+         * But let's assume that this could still happen:
+         * In this case we want the application to crash so that someone else can fix that nonsense.
+         * "assert" seems like a good choice for this case (for once).
+         */
+        assert !(length < 0);
+        if (length != 0) {
             list.add(new DokanControl(start));
             for (int i = 1; i < length; i++) {
                 list.add(new DokanControl(start, i * list.get(0).size()));
             }
-            return list;
         }
+        return list;
     }
 }

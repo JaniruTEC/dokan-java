@@ -1,13 +1,14 @@
 package dev.dokan.dokan_java.structure;
 
 
-import com.sun.jna.platform.win32.WinDef;
-import dev.dokan.dokan_java.DokanNativeMethods;
-import dev.dokan.dokan_java.constants.dokany.MountOption;
 import com.sun.jna.Structure;
 import com.sun.jna.WString;
+import com.sun.jna.platform.win32.WinDef;
+import dev.dokan.dokan_java.DokanNativeMethods;
+import dev.dokan.dokan_java.Unsigned;
+import dev.dokan.dokan_java.UnsignedConversions;
+import dev.dokan.dokan_java.constants.dokany.MountOption;
 import dev.dokan.dokan_java.masking.MaskValueSet;
-import org.joou.ULong;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,7 +24,7 @@ public class DokanOptions extends Structure implements Structure.ByReference {
 	/**
 	 * Version of the Dokan features requested (version "123" is equal to Dokan version 1.2.3).
 	 */
-	public WinDef.USHORT Version = DokanNativeMethods.getMinimumRequiredDokanVersion();
+	public WinDef.USHORT Version = UnsignedConversions.toNative(DokanNativeMethods.getMinimumRequiredDokanVersion());
 
 	/**
 	 * Number of threads to be used internally by Dokan library. More thread will handle more events at the same time.
@@ -37,7 +38,7 @@ public class DokanOptions extends Structure implements Structure.ByReference {
 
 	/**
 	 * FileSystem can store anything here
-	 */
+	 */ //FIXME Sure?!
 	public WinDef.ULONGLONG GlobalContext = new WinDef.ULONGLONG(0L);
 
 	/**
@@ -71,22 +72,22 @@ public class DokanOptions extends Structure implements Structure.ByReference {
 
 	}
 
-	public DokanOptions(final String mountPoint, final short threadCount, final MaskValueSet<MountOption> mountOptions, final String uncName, final long timeout, final long allocationUnitSize, final long sectorSize) {
+	public DokanOptions(final String mountPoint, @Unsigned final short threadCount, final MaskValueSet<MountOption> mountOptions, final String uncName, @Unsigned final int timeout, @Unsigned final int allocationUnitSize, @Unsigned final int sectorSize) {
 		MountPoint = new WString(mountPoint);
-		ThreadCount = threadCount;
-		Options = mountOptions.intValue();
+		ThreadCount = UnsignedConversions.primitiveToNative(threadCount);
+		Options = UnsignedConversions.primitiveToNative(mountOptions.intValue());
 		if (uncName != null) {
 			UNCName = new WString(uncName);
 		} else {
 			UNCName = null;
 		}
-		Timeout = timeout;
-		AllocationUnitSize = allocationUnitSize;
-		SectorSize = sectorSize;
+		Timeout = UnsignedConversions.primitiveToNative(timeout);
+		AllocationUnitSize = UnsignedConversions.primitiveToNative(allocationUnitSize);
+		SectorSize = UnsignedConversions.primitiveToNative(sectorSize);
 	}
 
 	public MaskValueSet<MountOption> getMountOptions() {
-		return MaskValueSet.maskValueSet(this.Options, MountOption.values());
+		return MaskValueSet.maskValueSet(UnsignedConversions.nativeToPrimitive(this.Options), MountOption.values());
 	}
 
 	@Override
