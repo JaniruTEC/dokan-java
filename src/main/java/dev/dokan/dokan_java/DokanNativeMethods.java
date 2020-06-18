@@ -4,6 +4,7 @@ package dev.dokan.dokan_java;
 import com.sun.jna.Native;
 import com.sun.jna.Pointer;
 import com.sun.jna.WString;
+import com.sun.jna.platform.win32.WinDef;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.ptr.IntByReference;
 import com.sun.jna.win32.StdCallLibrary;
@@ -22,8 +23,17 @@ public class DokanNativeMethods implements StdCallLibrary {
 
 	private static final short MINIMUM_REQUIRED_DOKAN_VERSION = 130;
 
+	private static final int REQUIRED_WIN_BYTE_SIZE = 1;
+	private static final int REQUIRED_WIN_SHORT_SIZE = 2;
+	private static final int REQUIRED_WIN_INT_SIZE = 4;
+	private static final int REQUIRED_WIN_LONG_SIZE = 8;
+	private static final int REQUIRED_WIN_POINTER_SIZE = REQUIRED_WIN_LONG_SIZE;
+	private static final String TEST_SIZE_FAILED_MESSAGE = "Critical Error: dokan-java requires %s to be %d bytes long, but got %d! " +
+			"This dokan-java release cannot be run on this computer. dokan-java is required for this program to work. " +
+			"Please contact the author of the program or the dokan-java-team at https://www.github.com/dokan-dev/dokan-java";
 
 	static {
+		checkSizes();
 		Native.register(DOKAN_DLL);
 	}
 
@@ -272,4 +282,25 @@ public class DokanNativeMethods implements StdCallLibrary {
 	 */
 	static native boolean DokanNotifyRename(WString OldPath, WString NewPath,
 											boolean IsDirectory, boolean IsInSameDirectory);
+
+	static void checkSizes() {
+		checkSize(WinDef.CHAR.SIZE, REQUIRED_WIN_BYTE_SIZE, "Win CHAR");
+		checkSize(WinDef.BYTE.SIZE, REQUIRED_WIN_BYTE_SIZE, "Win BYTE");
+		checkSize(WinDef.USHORT.SIZE, REQUIRED_WIN_SHORT_SIZE, "Win USHORT");
+		checkSize(WinDef.SHORT.SIZE, REQUIRED_WIN_SHORT_SIZE, "Win SHORT");
+		checkSize(WinDef.DWORD.SIZE, REQUIRED_WIN_INT_SIZE, "Win DWORD");
+		checkSize(WinDef.ULONG.SIZE, REQUIRED_WIN_INT_SIZE, "Win ULONG");
+		checkSize(WinDef.LONG.SIZE, REQUIRED_WIN_INT_SIZE, "Win LONG");
+		checkSize(WinDef.LONGLONG.SIZE, REQUIRED_WIN_LONG_SIZE, "Win LONGLONG");
+		checkSize(WinDef.ULONGLONG.SIZE, REQUIRED_WIN_LONG_SIZE, "Win ULONGLONG");
+
+		checkSize(Native.LONG_SIZE, REQUIRED_WIN_INT_SIZE, "Native LONG");
+		checkSize(Native.POINTER_SIZE, REQUIRED_WIN_LONG_SIZE, "Native POINTER");
+	}
+
+	static void checkSize(int given, int required, String typeName) {
+		if(given != required) {
+			throw new AssertionError(String.format(TEST_SIZE_FAILED_MESSAGE, typeName, required, given));
+		}
+	}
 }
